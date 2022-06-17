@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Adventure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+</head>
+<body>
+    <img id="loading" src="load.gif">
+    <div class="container mx-auto p-3 w-4/5 mt-3">
+        <!-- navbar -->
+            <nav class="md:flex md:justify-center md:items-center p-2 shadow-lg rounded-md">
+                <div class="flex justify-between items-center">
+                    <span class="text-2xl font-[Poppins] cursor-pointer ml-2 capitalize my-2"></span>
+                    <ion-icon name="menu" class="bx bx-menu bx-sm cursor-pointer md:hidden block mx-2"  onclick="Menu(this)"></ion-icon>
+                </div>
+                <ul class="md:flex md:items-center z-[1] md:z-auto md:static absolute md:w-auto bg-white w-full md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[400px] transition-all ease-in duration-500">
+                    
+                    <li class="navbar-list mx-4 my-6">
+                        <a href="index.html" class="px-5 py-2 bg-cyan-300  rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white capitalize">home</a>
+                    </li>
+                    <li class="navbar-list mx-4 my-6">
+                        <a href="kategori.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">kategori</a>
+                    </li>
+                    <li class="navbar-list mx-4 my-6">
+                        <a href="foto.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">resep</a>
+                    </li>
+                    <li class="navbar-list mx-4 my-6">
+                        <a href="info.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">tentang kami</a>
+                    </li>
+                </ul>
+                </nav>
+                <div class="w-full my-20">
+                    <!-- header -->
+                    <div class="flex rounded-md overflow-hidden">
+                        <div id="photo" class="flex-auto w-1/2"></div>
+                        <div class="flex-auto w-1/2 py-48 bg-sky-200">
+                            <h2 id="name" class="text-3xl font-semibold font-serif text-center text-gray-700"></h2>
+                            <p class="text-center pt-5 text-gray-700">
+                                <span id="category" class="px-2 py-1 border-solid border-2 border-gray-600"></span>
+                                <span id="area" class="ml-10 px-2 py-1 border-solid border-2 border-gray-600"></span>
+                            </p>
+                        </div>
+                    </div>
+                     
+                     <p id="ingredients" class="px-28"></p>
+                     <p id="instructions" class="pb-10 px-28"></p>
+             
+                     <div class="w-full h-35 overflow-hiddden mt-20 rounded-md text-center text-black font-bold bg-cyan-300">
+                        <h3 class="py-8">Sifa Nur Febriani @ 2022</h3>
+                    </div>
+                 </div>
+             
+                 <!-- youtube -->
+                 <div class="fixed bottom-10 right-2">
+                     <iframe id="youtube" class="float-right" width="250" height="165"></iframe>
+                 </div>
+             
+                 <script>
+                      $(function(){
+                         //tangkap id
+                         $.urlParam = function(name){
+                             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                             return results[1] || 0;
+                         }
+             
+                         let id =  $.urlParam('id');
+             
+                         $.ajax({
+                             method: "GET",
+                             url: "https://www.themealdb.com/api/json/v1/1/lookup.php?i="+ id
+                         })
+                         .done(function( msg ) {
+                             //konversi objek menjadi array
+                             let meals = msg.meals;
+                             console.log(meals);
+                             let meal = meals[0];
+             
+                             $("#photo").css('background-image', 'url('+ meal.strMealThumb +')')
+                             $("#name").text(meal.strMeal);
+                             $("#area").text(meal.strArea);
+                             $("#category").text(meal.strCategory);
+                             $("#instructions").html("<p class='font-semibold py-10 text-2xl'>Instructions</p>"+ meal.strInstructions);
+                             
+                             //mengisi bahan resep
+                             let bahan = "";
+                             for (let index = 1; index <= 20; index++) {
+                                 
+                                 //jika bahan kosong, maka selesai
+                                 if( meal['strIngredient'+ index] === "") break;
+             
+                                 //jika ada, maka masukkan kedalam variabel "bahan"
+             
+                                 bahan += meal['strIngredient'+ index] +" "+ meal['strMeasure'+ index] + "<br/>";
+             
+                             }
+             
+                             $("#ingredients").html("<p class='font-semibold py-10 text-2xl'>Ingredients</p>"+ bahan);
+             
+                             //memasukkan youtube
+                             let yt = meal.strYoutube;
+                             yt = yt.replace('watch?v=', 'embed/')
+                             
+                             $("#youtube").attr('src', yt); 
+                             
+                             $("#loading").hide(); //sembunyikan gambar "loading" jika data telah masuk
+                         });
+                      });
+                 </script>
+    <script src="menu.js">
+    </script>
+</body>
+</html>

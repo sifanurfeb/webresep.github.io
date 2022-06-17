@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resep Kategori</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+</head>
+<body>
+    <img src="load.gif" id="loading">
+    <div class="container mx-auto p-6 w-4/5 mt-5">
+    <!-- navbar -->
+    <nav class="md:flex md:justify-center md:items-center p-2 shadow-lg rounded-md">
+        <div class="flex justify-between items-center">
+            <span class="text-2xl font-[Poppins] cursor-pointer ml-2 capitalize my-2"></span>
+            <ion-icon name="menu" class="bx bx-menu bx-sm cursor-pointer md:hidden block mx-2"  onclick="Menu(this)"></ion-icon>
+        </div>
+        <ul class="md:flex md:items-center z-[1] md:z-auto md:static absolute md:w-auto bg-white w-full md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[400px] transition-all ease-in duration-500">
+            
+            <li class="navbar-list mx-4 my-6">
+                <a href="index.html" class="px-5 py-2 bg-cyan-300  rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white capitalize">home</a>
+            </li>
+            <li class="navbar-list mx-4 my-6">
+                <a href="kategori.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">kategori</a>
+            </li>
+            <li class="navbar-list mx-4 my-6">
+                <a href="foto.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">resep</a>
+            </li>
+            <li class="navbar-list mx-4 my-6">
+                <a href="info.html" class="px-5 py-2 capitalize  bg-cyan-300 rounded-md transition ease-in-out delay-150  hover:bg-teal-500 duration-300 text-white">tentang kami</a>
+            </li>
+        </ul>
+        </nav>
+
+        <h3 id="pilih" class="text-4xl text-amber-400 py-20 font-semibold text-center">Pilih Kategori</h3>
+        <div id="resep" class="grid grid-cols-4 gap-4"></div>
+        <p class="text-sky-600 text-center py-10">Sifa Nur Febriani @ 2022</p>
+    </div>
+    <script>
+        $(function(){
+            //tangkap id
+             $.urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                return results[1] || 0;
+            }
+
+            let kategori =  $.urlParam('kategori');
+
+           $.ajax({
+               method: "GET",
+               url: "https://www.themealdb.com/api/json/v1/1/filter.php?c="+ kategori
+           })
+           .done(function( msg ) {
+               //konversi objek menjadi array
+               let meals = msg.meals;
+               let isiData = "";
+
+               console.log(meals);
+               
+               //menampilkan banyak data
+                $.each(meals, function(index){
+                    isiData += "<div class='bg-slate-100 border rounded-md overflow-hidden'><div class='h-50 overflow-hidden'><a href='detail.html?id="+ meals[index].idMeal +"'><img class='w-full rounded-t-sm' src='"+ meals[index].strMealThumb +"'></div><p class='font-semibold text-xl p-5'>"+ meals[index].strMeal +"</p></a></div></div>";
+                });
+                $("title").text(kategori);
+                $("#pilih").text("Kamu memilih '"+ kategori +"'");
+                $("#resep").append(isiData);
+                $("#loading").hide(); //sembunyikan gambar "loading" jika data telah masuk
+           });
+        });
+   </script>
+   <script src="menu.js"></script>
+</body>
+</html>
