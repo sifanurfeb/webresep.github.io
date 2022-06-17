@@ -54,7 +54,7 @@
 
                 //menampilkan banyak data
                 $.each(categories, function(index){
-                    isiData += "<div class ='bg-slate-100 border rounded-md overflow-hidden'><div class='h-50 overflow-hidden'><a href='resep-kategori.html?kategori="+categories[index].strCategoryThumb +"'></div><p class='font-semibold text-xl p-5'>"+ categories[index].strCategory +"</p></a></div></div>";
+                    isiData += "<div class ='bg-slate-100 border rounded-md overflow-hidden'><div class='h-50 overflow-hidden'><a href='resep_kategori.html?kategori="+categories[index].strCategoryThumb +"'></div><p class='font-semibold text-xl p-5'>"+ categories[index].strCategory +"</p></a></div></div>";
                 });
                 $("#kategori").append(isiData);
                 $("#loading").hide();
